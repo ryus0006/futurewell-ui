@@ -6,10 +6,10 @@ interface HeroIntroProps {
 }
 
 const steps = [
-  ['01', 'Profile', 'Age and sex decide which population context applies.'],
-  ['02', 'Awareness', 'A short heart-risk note explains why checking early matters.'],
-  ['03', 'Risk inputs', 'Clinical values are collected before the estimate is requested.'],
-  ['04', 'Next steps', 'The result is paired with guidance and public-care access.'],
+  ['01', 'About you', 'Enter age and sex.'],
+  ['02', 'Why it matters', 'See the heart-health context.'],
+  ['03', 'Your numbers', 'Add the clinical inputs.'],
+  ['04', 'Your result', 'Review guidance and care options.'],
 ] as const;
 
 /**
@@ -21,11 +21,10 @@ export function HeroIntro({ onStart, onFindClinic }: HeroIntroProps) {
     <section className={styles.hero} aria-labelledby="hero-heading">
       <div className={styles.copy}>
         <p className={styles.kicker}>Preventive heart-health assessment</p>
-        <h2 id="hero-heading">Understand your heart risk before it becomes urgent.</h2>
+        <h2 id="hero-heading">Check your heart risk.</h2>
         <p className={styles.lede}>
-          FutureWell helps Malaysian adults move from awareness to action: understand why
-          cardiovascular prevention matters, enter the health numbers used for a risk estimate, then
-          review practical guidance and public clinic options.
+          FutureWell helps Malaysian adults understand cardiovascular risk, receive practical
+          guidance, and find public clinic options for follow-up.
         </p>
 
         <div className={styles.actions} id="hero-actions">
@@ -45,11 +44,11 @@ export function HeroIntro({ onStart, onFindClinic }: HeroIntroProps) {
 
       <div className={styles.preview} aria-label="FutureWell product overview">
         <div className={styles.measurePanel}>
-          <span className={styles.panelLabel}>What the app does</span>
-          <strong>Awareness, risk context, and next steps in one flow.</strong>
+          <span className={styles.panelLabel}>What you can do here</span>
+          <strong>From quick profile to clear next steps.</strong>
           <p>
-            Designed around the same pattern used by heart-risk tools: collect only the needed
-            inputs, show the estimate clearly, and make follow-up easier to act on.
+            Start with simple details, complete the risk inputs, then review the result and support
+            options.
           </p>
         </div>
 
