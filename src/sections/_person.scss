@@ -1,0 +1,7 @@
+/* The figure used by both hundred-mark grids: the awareness pictograph and the
+   risk result. Shared so the two read as the same kind of statement — one about
+   the population, one about the reader.
+
+   Painted by masking an element's own background, so colour comes from the
+   element's class alone and the figure costs no extra node and no request. */
+$person: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2010%2016'%3E%3Ccircle%20cx='5'%20cy='2.8'%20r='2.5'/%3E%3Cpath%20d='M1.5%2010.8C1.5%208.1%203%206.2%205%206.2s3.5%201.9%203.5%204.6V16H6.15v-4.2H3.85V16H1.5z'/%3E%3C/svg%3E");

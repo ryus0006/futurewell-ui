@@ -1,0 +1,50 @@
+/* Fully opaque, not near-opaque: at 0.98 the page text stayed faintly legible
+   through the bar on every scroll, which reads as a rendering fault. */
+.topbar {
+  align-items: stretch;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  min-height: var(--topbar-height);
+  padding: 0 clamp(1.25rem, 3vw, 2.4rem);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.brand {
+  align-items: center;
+  color: var(--ink);
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  gap: 0.6rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+/* Ink, not teal: the mark is identity, and teal on this page means "you can act
+   on this". A coloured mark in a corner claims an affordance it does not have. */
+.mark {
+  align-items: center;
+  background: var(--ink);
+  display: inline-flex;
+  height: 1.7rem;
+  justify-content: center;
+  transform: rotate(45deg);
+  width: 1.7rem;
+}
+
+.mark span {
+  background: #fff;
+  display: block;
+  height: 0.58rem;
+  width: 0.58rem;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    padding: 0 1rem;
+  }
+}

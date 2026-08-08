@@ -1,0 +1,166 @@
+@use './person';
+
+.sheet {
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-line);
+}
+
+/* Light, because the reader has to count both groups. The weight on this screen
+   comes from the twenty-five ink figures themselves, not from a dark ground —
+   and on a dark ground the seventy-five went invisible, which left the graphic
+   showing a number with no denominator. */
+.stage {
+  background: var(--mist);
+  padding: clamp(1.4rem, 3.4vw, 2.2rem);
+}
+
+.grid {
+  display: grid;
+  gap: 0.34rem 0.26rem;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+}
+
+.mark {
+  aspect-ratio: 5 / 7;
+  display: block;
+  mask: person.$person no-repeat center / contain;
+  -webkit-mask: person.$person no-repeat center / contain;
+  width: 100%;
+}
+
+/* Neutral: these hundred are the population, not the reader. The same hundred
+   figures on the result screen carry the risk colour, and that difference is
+   the point — grey is the world, colour is you. */
+.highlighted {
+  background: var(--ink);
+}
+
+/* Clearly subordinate, but never faint: these seventy-five are the denominator,
+   so "1 in 4" only reads if they are all still countable. */
+.rest {
+  background: var(--line-strong);
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+
+/* ---------------------------------------------------------------- key --- */
+
+.key {
+  align-items: baseline;
+  border-top: 1px solid var(--line-strong);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin-top: clamp(1.1rem, 2.6vw, 1.5rem);
+  padding-top: 1rem;
+}
+
+.key strong {
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.key span {
+  align-items: center;
+  color: var(--stone);
+  display: inline-flex;
+  font-size: 0.88rem;
+  font-weight: 400;
+  gap: 0.45rem;
+}
+
+/* The legend carries the same glyph as the grid, so the key reads as a sample of
+   it rather than as a separate colour chart. */
+.swatch {
+  display: inline-block;
+  height: 1.1rem;
+  mask: person.$person no-repeat center / contain;
+  -webkit-mask: person.$person no-repeat center / contain;
+  width: 0.8rem;
+}
+
+/* ------------------------------------------------------------ callout --- */
+
+.callout {
+  background: var(--white);
+  font-family: var(--font-display);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+  font-weight: 400;
+  line-height: 1.55;
+  padding: 1.1rem clamp(1.2rem, 3vw, 2rem);
+}
+
+.callout strong {
+  font-weight: 600;
+}
+
+.pivot {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.55;
+  padding: 1.1rem clamp(1.2rem, 3vw, 2rem);
+}
+
+.source {
+  border-top: 1px solid var(--line);
+  color: var(--stone);
+  font-size: 0.84rem;
+  font-weight: 400;
+  line-height: 1.45;
+  padding: 1rem clamp(1.2rem, 3vw, 2rem);
+}
+
+/* ----------------------------------------------------- reference table --- */
+
+.reference {
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+  padding: 1rem clamp(1.2rem, 3vw, 2rem) 1.2rem;
+}
+
+.reference table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Each notation holds together, but the cell may break *between* them. Keeping
+   the whole cell on one line instead starves the group column on a phone, where
+   it then wraps mid-range ("Malaysian men, 41-" / "59"). */
+.share span {
+  white-space: nowrap;
+}
+
+.reference th,
+.reference td {
+  border-bottom: 1px solid var(--line);
+  color: var(--stone);
+  font-size: 0.9rem;
+  padding: 0.55rem 0.6rem 0.55rem 0;
+  text-align: left;
+}
+
+/* Two columns of prose in ~290px is right at the limit: at the full size both
+   group labels wrap after the comma. A step down buys the line back. */
+@media (max-width: 760px) {
+  .reference th,
+  .reference td {
+    font-size: 0.82rem;
+    padding-right: 0.4rem;
+  }
+}
+
+.reference th {
+  color: var(--ink);
+  font-weight: 600;
+}

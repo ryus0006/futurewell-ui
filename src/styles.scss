@@ -1,1 +1,341 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ * Global styles: self-hosted fonts, design tokens, resets, and the app layout
+ * frame. Everything else is a CSS Module scoped to its component.
+ */
+
+/* ---------------------------------------------------------------- font ---
+ * Self-hosted: a health app should not announce every visitor to a third party.
+ *
+ * Three roles from one superfamily. Serif carries headings and prose; sans
+ * carries labels, buttons and navigation; mono carries every measured value.
+ * The readings come off a cuff or a lab slip, so they are set like readings —
+ * tabular, monospaced, unit attached.
+ */
+@font-face {
+  font-family: 'Plex Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/plex-serif-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plex Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/plex-serif-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Plex Serif';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/plex-serif-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plex Serif';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/plex-serif-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Plex Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/plex-sans-400_600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plex Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/plex-sans-400_600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/plex-mono-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/plex-mono-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* -------------------------------------------------------------- tokens --- */
+
+:root {
+  --font-display: 'Plex Serif', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Plex Sans', 'Segoe UI', Helvetica, sans-serif;
+  --font-data: 'Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Neutral by default. Borders, headings and information surfaces are ink,
+     stone and warm grey; the neutrals carry the contrast so hue does not have
+     to. Warm, so nothing on the page reads as hospital-admin blue. */
+  --ink: #1b1917;
+  --stone: #6b655d;
+  --line: #dcd7ce;
+  --line-strong: #b6afa3;
+  --mist: #f1eee8;
+  --field: #fdfcfa;
+  --paper: #faf8f4;
+  --white: #ffffff;
+
+  /* Teal means one thing: you can act on it. Buttons, links, focus rings and
+     reachable steps — nothing decorative. */
+  --teal: #0b6e63;
+  --teal-deep: #0a5c53;
+
+  /* Saturated colour means one thing: your state. The risk ramp is the
+     backend's level, and validation is the form's. Neither appears anywhere
+     else, so colour on this page always means something about you.
+
+     Amber is intrinsically lighter than the other two, so the ramp cannot be
+     monotonic in greyscale. The band word and the filled-figure count state
+     the level independently — colour is never the only carrier. */
+  --risk-low: #2f7050;
+  --risk-mid: #9a6207;
+  --risk-high: #a0271a;
+  --alert: #a81b3f;
+
+  --shadow-line: 0 1px 2px rgba(27, 25, 23, 0.05);
+  --control-height: 3.5rem;
+
+  /* Sticky-chrome heights, as tokens so `StepNav` can offset itself below the
+     topbar without arithmetic in JS. */
+  --topbar-height: 4.5rem;
+  --stepnav-height: 3.5rem;
+}
+
+/* --------------------------------------------------------------- reset --- */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  margin: 0;
+}
+
+button,
+input,
+select {
+  box-sizing: border-box;
+  font: inherit;
+  max-width: 100%;
+  min-width: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--teal-deep);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+/* Every measured value: the eight clinical inputs, the estimate, the units.
+   Tabular so digits hold a column instead of drifting with their own widths. */
+.reading {
+  font-family: var(--font-data);
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+}
+
+/* Element-level rules, so they belong here: a CSS Module would leave them
+   global anyway, just less obviously. */
+label,
+fieldset {
+  border: 0;
+  color: var(--stone);
+  display: grid;
+  font-size: 0.875rem;
+  font-weight: 600;
+  gap: 0.55rem;
+  letter-spacing: 0.005em;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+/* `float` is what lines a <legend> up with a plain <label>'s text. Unfloated, it
+   is the fieldset's *rendered legend*, which browsers hoist out of the flow and
+   draw over the border, ignoring padding. Any float disqualifies it; the float
+   itself does nothing, since floats are ignored on grid items. */
+legend {
+  color: var(--stone);
+  float: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+input[type='number'],
+input[type='text'] {
+  background: var(--field);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  min-height: var(--control-height);
+  padding: 0.8rem 0.9rem;
+}
+
+input[type='number']:hover,
+input[type='text']:hover {
+  border-color: var(--teal);
+}
+
+/* Keyboard users should not have to tab the step nav on every load. */
+.skip-link {
+  background: var(--white);
+  border: 1px solid var(--line);
+  color: var(--teal-deep);
+  font-weight: 700;
+  left: 0.75rem;
+  padding: 0.6rem 1rem;
+  position: absolute;
+  top: -100vh;
+  z-index: 60;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+/* Present to assistive technology, absent visually — `display: none` would
+   remove it from the accessibility tree along with the pixels. */
+.visually-hidden {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ------------------------------------------------------- layout frame --- */
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.workspace {
+  display: grid;
+  margin: 0 auto;
+  max-width: 1160px;
+  padding: 0 clamp(1rem, 3vw, 2.8rem) 4rem;
+}
+
+/* Browser Back leaves the site — there are no routes — so every screen past the
+   first carries its own. Quiet: it is the escape, not the next action. */
+.screen-back {
+  margin-bottom: 1.5rem;
+}
+
+.screen-back button {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--stone);
+  display: inline-flex;
+  font-size: 0.94rem;
+  font-weight: 600;
+  gap: 0.45rem;
+  padding: 0.3rem 0;
+}
+
+.screen-back button::before {
+  content: '\2190';
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.screen-back button:hover {
+  color: var(--teal-deep);
+}
+
+@media (max-width: 760px) {
+  :root {
+    --topbar-height: 4rem;
+    --stepnav-height: 3.2rem;
+  }
+
+  .workspace {
+    padding: 0 1rem 3rem;
+  }
+}
+
+/* ------------------------------------------------------ reduced motion ---
+ * Smooth scrolling is a common vestibular-migraine trigger. `App` checks the
+ * same query before scrolling between screens.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

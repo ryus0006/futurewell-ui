@@ -1,0 +1,338 @@
+.panel:focus-visible {
+  outline: 3px solid var(--teal-deep);
+  outline-offset: 3px;
+}
+
+.prompt {
+  color: var(--stone);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------- toolbar --- */
+
+.toolbar {
+  align-items: end;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0;
+  grid-template-columns: minmax(150px, 0.75fr) repeat(3, minmax(180px, 1fr)) auto;
+  margin-top: 0.4rem;
+  width: 100%;
+}
+
+.toolbar strong {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  display: flex;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-height: 4.8rem;
+  padding: 0.85rem;
+}
+
+.toolbar label {
+  border-bottom: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  gap: 0.35rem;
+  min-height: 4.8rem;
+  padding: 0.65rem;
+}
+
+.toolbar input,
+.toolbar select {
+  height: var(--control-height);
+  inline-size: 100%;
+  min-height: var(--control-height);
+  padding: 0.55rem 0.65rem;
+}
+
+.toolbar button {
+  align-self: end;
+  background: var(--teal);
+  border: 0;
+  color: #fff;
+  font-weight: 600;
+  height: var(--control-height);
+  min-height: var(--control-height);
+  padding: 0 1.1rem;
+}
+
+.toolbar button:disabled {
+  background: var(--mist);
+  color: var(--stone);
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------- map --- */
+
+.finder {
+  border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+  margin-top: 1rem;
+  /* Malaysia is roughly 3:1 wide, so at this height the fitted country sits in a
+     band across the middle with Thailand above and Kalimantan below. That is the
+     accepted cost of giving the results list beside it room to breathe. */
+  min-height: 34rem;
+  overflow: hidden;
+}
+
+/* Leaflet needs a resolved height on its container or it renders 0px tall.
+   `min-width: 0` lets the map cell shrink below the tiles' intrinsic width —
+   without it a grid item refuses to go under its min-content size. */
+.map {
+  background: #b9dfe6;
+  height: 100%;
+  min-height: 34rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.map :global(.leaflet-control-zoom) {
+  border: 1px solid rgba(27, 25, 23, 0.22);
+  box-shadow: none;
+}
+
+.map :global(.leaflet-control-zoom a) {
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.map :global(.leaflet-control-attribution) {
+  color: rgba(27, 25, 23, 0.82);
+  font-size: 0.68rem;
+}
+
+/* Applied to the Leaflet `divIcon` element itself, which is why it carries its
+   own box model rather than inheriting one. Width and height are deliberately
+   absent: Leaflet writes them inline from `iconSize`, which it also halves for
+   the anchor offset, so `iconSize` has to stay the single source of the size.
+
+   `:global(.leaflet-marker-icon)` is not decoration. leaflet.css sets
+   `display: block` on that class, at the same specificity as this rule and from
+   a stylesheet imported afterwards — so it won, the flex centring never applied,
+   and the digits sat 18px left and 14px above the middle of the circle. */
+.cluster:global(.leaflet-marker-icon) {
+  align-items: center;
+  background: var(--teal);
+  border: 4px solid rgba(0, 124, 137, 0.28);
+  border-radius: 999px;
+  color: #fff;
+  display: flex;
+  /* Counts run to three digits on the real registry (Selangor alone has ~254),
+     which has to fit the 28px inside the ring. */
+  font-size: 0.8rem;
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Shown until the map is engaged. `pointer-events: none` so it never eats the
+   click that engages it, and it sits under Leaflet's own controls (z-index 800+)
+   rather than over them. */
+.zoomHint {
+  background: rgba(27, 25, 23, 0.78);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.65rem;
+  pointer-events: none;
+  position: absolute;
+  right: 0.6rem;
+  top: 0.6rem;
+  z-index: 450;
+}
+
+/* Inside the Leaflet icon, which is why it lives in this module rather than the
+   global `.visually-hidden`: the icon's HTML is a string and can only reference a
+   hashed class name through interpolation. */
+.srOnly {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.cluster:global(.leaflet-marker-icon):focus-visible {
+  outline: 3px solid var(--teal-deep);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------- detail --- */
+
+.detail {
+  background: var(--white);
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-height: 34rem;
+  overflow-y: auto;
+  padding: 1.4rem;
+}
+
+.detail h3 {
+  color: var(--ink);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.kicker {
+  color: var(--stone);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.selected {
+  display: grid;
+  gap: 0;
+  margin-top: 0.4rem;
+}
+
+.selected div {
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.5rem 0;
+}
+
+.selected dt {
+  color: var(--stone);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.selected dd {
+  color: var(--ink);
+  font-size: 0.94rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------ list --- */
+
+.list {
+  display: grid;
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+}
+
+.list button {
+  background: var(--field);
+  border: 0;
+  border-top: 1px solid var(--line);
+  display: block;
+  padding: 0.8rem 0.7rem;
+  text-align: left;
+  width: 100%;
+}
+
+.list li:last-child button {
+  border-bottom: 1px solid var(--line);
+}
+
+.list button:hover {
+  background: var(--mist);
+}
+
+.list strong {
+  color: var(--ink);
+  display: block;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.list span {
+  color: var(--stone);
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 400;
+  margin-top: 0.18rem;
+}
+
+.itemSelected {
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.more {
+  color: var(--stone);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-top: 0.7rem;
+}
+
+.source {
+  border-top: 1px solid var(--line);
+  color: var(--stone);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
+
+/* The map and the detail column cannot share a row much below this: the detail
+   column alone asks for 320px, and a map narrower than about 550px is a
+   thumbnail. So the split stacks earlier than the 760px the rest of the app uses. */
+@media (max-width: 900px) {
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toolbar strong {
+    grid-column: 1 / -1;
+    /* 4.8rem exists to match the height of a label + its control on one row.
+       Once the count is on a row of its own, that is just dead space. */
+    min-height: 3.2rem;
+  }
+
+  /* Three filters into two columns leaves the third beside an empty cell, and
+     the empty cell's missing border stops the row's underline half way across. */
+  .toolbar label:nth-of-type(3) {
+    grid-column: 1 / -1;
+  }
+
+  .toolbar button {
+    grid-column: 1 / -1;
+  }
+
+  .finder {
+    grid-template-columns: 1fr;
+  }
+
+  .map,
+  .detail {
+    max-height: none;
+    min-height: 22rem;
+  }
+
+  .detail {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 760px) {
+  /* One column, like both forms at this width. The vertical borders that
+     separated the toolbar cells have nothing to separate any more. */
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar label {
+    border-left: 0;
+  }
+}

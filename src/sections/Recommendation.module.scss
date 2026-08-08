@@ -1,0 +1,261 @@
+@use './person';
+
+/* The estimate and the answers share the top row, deliberately unevenly: equal
+   columns claim equal importance, and these two are not peers — one is the
+   result, the other the receipt for it. */
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+}
+
+/* Sized by its own content rather than stretched to the estimate beside it. */
+.grid > :nth-child(2) {
+  align-self: start;
+}
+
+/* Guidance takes the estimate's column rather than the full width: its
+   paragraph is capped at a readable measure, and the leftover space reads as a
+   missing element inside a border but as margin outside one. */
+.grid > :nth-child(3) {
+  grid-column: 1;
+}
+
+.panel {
+  align-content: start;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-line);
+  display: grid;
+  gap: 0.75rem;
+  /* Capped for the same reason as `.stage` in Section.module.scss: an auto
+     track grows past its container to fit its item's min-content. */
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(1.2rem, 2.6vw, 2rem);
+}
+
+.label {
+  color: var(--stone);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------- result --- */
+
+/* The band the backend returned, as a local colour. The number, the band label
+   and the meter all read from it, so the colour on screen always means the
+   level the response reported rather than where the fill happens to land. */
+.low {
+  --risk: var(--risk-low);
+}
+
+.medium {
+  --risk: var(--risk-mid);
+}
+
+.high {
+  --risk: var(--risk-high);
+}
+
+.output {
+  align-items: baseline;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  margin-top: 0.4rem;
+  padding-top: 1.2rem;
+}
+
+/* The estimate is the answer to the question the form asked, so it is the
+   largest thing here; the band names it. */
+.percent {
+  color: var(--risk);
+  font-family: var(--font-data);
+  font-size: clamp(2.9rem, 6.4vw, 4.1rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.band {
+  color: var(--risk);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.horizon {
+  color: var(--stone);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  max-width: 44ch;
+}
+
+/* The estimate again, as a hundred people. A percentage is exactly a count out
+   of a hundred, so this restates the response rather than interpreting it — and
+   an icon array is the format lay readers actually read risk from.
+
+   It also survives colour vision deficiency: the filled count and the band word
+   both carry the level, so the ramp is never the only signal. */
+.array {
+  display: grid;
+  gap: 0.26rem 0.22rem;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  margin-top: 0.9rem;
+  max-width: 24rem;
+}
+
+.tick {
+  aspect-ratio: 5 / 7;
+  display: block;
+  mask: person.$person no-repeat center / contain;
+  -webkit-mask: person.$person no-repeat center / contain;
+  width: 100%;
+}
+
+.on {
+  background: var(--risk);
+}
+
+.off {
+  background: var(--line);
+}
+
+.arrayNote {
+  color: var(--stone);
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+/* The "Guidance unavailable" note — the same quiet prose treatment as delivered
+   guidance, because missing guidance is not an error state. */
+.summaryNote {
+  color: var(--stone);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 66ch;
+}
+
+/* ------------------------------------------------- model disclosure --- */
+
+/* Folded away rather than dropped: every line here is backend-supplied
+   provenance, and stacked open it buried the estimate under four paragraphs of
+   hedging. The unvalidated warning above stays visible. */
+.model {
+  border-top: 1px solid var(--line);
+  color: var(--stone);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  padding-top: 0.9rem;
+}
+
+.model summary {
+  color: var(--teal-deep);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.model summary:focus-visible {
+  outline: 3px solid var(--teal-deep);
+  outline-offset: 2px;
+}
+
+.modelBody {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.6rem;
+}
+
+.modelBody strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Shown only when the backend reports an unvalidated model. */
+.illustrative {
+  background: rgba(154, 98, 7, 0.09);
+  border-left: 3px solid var(--risk-mid);
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.45;
+  padding: 0.75rem 0.9rem;
+}
+
+.disclaimer {
+  border-top: 1px solid var(--line);
+  color: var(--stone);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  padding-top: 0.9rem;
+}
+
+/* ------------------------------------------------------ inputs list --- */
+
+.inputs {
+  display: grid;
+  gap: 0;
+}
+
+.inputs div {
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+}
+
+.inputs dt {
+  color: var(--stone);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+
+.inputs dd {
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-size: 0.92rem;
+  font-weight: 500;
+  /* Measured figures, so they line up as a column rather than drifting with the
+     width of each digit. */
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  text-align: right;
+}
+
+.editLink {
+  color: var(--teal-deep);
+  font-weight: 600;
+  justify-self: start;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+/* -------------------------------------------------------- guidance --- */
+
+/* Above body size: this paragraph is the whole of the advice, and at 1rem it
+   reads as a footnote to the number. Capped in characters, not pixels. */
+.summary {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
