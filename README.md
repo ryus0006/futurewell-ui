@@ -95,5 +95,5 @@ docker run -p 8080:80 futurewell-ui
 ```
 
 nginx serves the built app and proxies `/api/` to
-`http://backend:8000`. That hostname must resolve to the FastAPI service in the
+`http://localhost:8000`. That hostname must resolve to the FastAPI service in the
 deployment network.
