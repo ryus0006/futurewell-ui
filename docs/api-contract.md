@@ -251,7 +251,7 @@ agree — a map showing clusters the list does not contain is worse than no map.
 
 ## 4.5 Configuration — relative URLs, no CORS
 
-`nginx.conf` proxies `/api/` to `http://backend:8000`, so the deployed frontend
+`nginx.conf` proxies `/api/` to `http://localhost:8000`, so the deployed frontend
 and the API share an origin. Consequences:
 
 - **Every request uses a relative path** (`/api/risk`). There is no API host to
@@ -264,11 +264,11 @@ and the API share an origin. Consequences:
   backend.
 
 **One deployment detail worth confirming early:** `nginx.conf` uses
-`proxy_pass http://backend:8000;` with no URI path, which passes the request URI
+`proxy_pass http://localhost:8000;` with no URI path, which passes the request URI
 through **unchanged**. So `/api/risk` in the browser arrives at the backend as
 `/api/risk` — FastAPI must mount these routes under the `/api` prefix, not at the
 root. If you would rather serve them at `/risk`, the proxy line becomes
-`proxy_pass http://backend:8000/;` (note the trailing slash) and nginx strips the
+`proxy_pass http://localhost:8000/;` (note the trailing slash) and nginx strips the
 prefix instead. Either works; they just have to agree.
 
 ## Error handling the frontend already implements
