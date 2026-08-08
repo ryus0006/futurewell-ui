@@ -30,6 +30,9 @@ const MALAYSIA_BOUNDS: [[number, number], [number, number]] = [
  */
 const EDGE_PADDING: [number, number] = [24, 24];
 
+/** Zoom for a single selected clinic — close enough to read the street it is on. */
+const SELECTED_CLINIC_ZOOM = 15;
+
 /**
  * The map.
  *
@@ -74,20 +77,12 @@ export function ClinicMap({
 
       {drilledDown
         ? items.map((clinic) => (
-            <CircleMarker
+            <ClinicCircle
               key={clinic.id}
-              center={[clinic.lat, clinic.lng]}
-              radius={clinic.id === selectedId ? 11 : 7}
-              pathOptions={{
-                color: clinic.id === selectedId ? '#7d2636' : '#007c89',
-                fillColor: clinic.id === selectedId ? '#7d2636' : '#007c89',
-                fillOpacity: 0.75,
-                weight: 2,
-              }}
-              eventHandlers={{ click: () => onSelectClinic(clinic.id) }}
-            >
-              <Tooltip>{clinic.name}</Tooltip>
-            </CircleMarker>
+              clinic={clinic}
+              selected={clinic.id === selectedId}
+              onSelect={() => onSelectClinic(clinic.id)}
+            />
           ))
         : clusters.map((cluster) => (
             <Marker
@@ -102,16 +97,45 @@ export function ClinicMap({
             </Marker>
           ))}
 
+      {/* At country view a selected clinic still gets its own marker, so zooming
+          to it never lands on an empty street with no pin. */}
+      {!drilledDown && selected && (
+        <ClinicCircle clinic={selected} selected onSelect={() => onSelectClinic(selected.id)} />
+      )}
+
       <FitView selected={selected} items={items} drilledDown={drilledDown} />
       <LockZoomToCountry />
       <WheelZoomOnEngage onChange={setWheelZoom} />
 
-      {!wheelZoom && (
+      {!wheelZoom && !selected && (
         <div className={styles.zoomHint} aria-hidden="true">
           Zoom in to see individual clinics
         </div>
       )}
     </MapContainer>
+  );
+}
+
+/** One clinic as a circle, enlarged and recoloured when it is the selection. */
+function ClinicCircle({
+  clinic,
+  selected,
+  onSelect,
+}: {
+  clinic: Clinic;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const color = selected ? '#7d2636' : '#007c89';
+  return (
+    <CircleMarker
+      center={[clinic.lat, clinic.lng]}
+      radius={selected ? 11 : 7}
+      pathOptions={{ color, fillColor: color, fillOpacity: 0.75, weight: 2 }}
+      eventHandlers={{ click: onSelect }}
+    >
+      <Tooltip>{clinic.name}</Tooltip>
+    </CircleMarker>
   );
 }
 
@@ -164,7 +188,7 @@ function FitView({
 
   useEffect(() => {
     if (selected) {
-      map.setView([selected.lat, selected.lng], Math.max(map.getZoom(), 12));
+      map.setView([selected.lat, selected.lng], Math.max(map.getZoom(), SELECTED_CLINIC_ZOOM));
     } else if (drilledDown && items.length > 0) {
       map.fitBounds(
         items.map((c) => [c.lat, c.lng] as [number, number]),
