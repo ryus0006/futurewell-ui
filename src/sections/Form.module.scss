@@ -1,37 +1,36 @@
 /* Form chrome shared by ProfileSection and RiskSection. Both import this module
    rather than duplicating it. */
 
+/* A form is one task to finish, so it gets an object edge rather than the
+   lighter rule that divides regions inside it. */
 .panel {
   background: var(--white);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-line);
   display: grid;
   gap: 0;
   /* Capped for the same reason as `.stage` in Section.module.scss: an auto
      track grows past its container to fit its item's min-content. */
   grid-template-columns: minmax(0, 1fr);
-  /* Capped to its content. Left at the full workspace width, a two-field form
-     put a 9rem control in a 540px cell and the empty half read as unfinished. */
+  /* Capped to its content. At the full workspace width a two-field form leaves
+     most of each cell empty, which reads as unfinished rather than as space. */
   max-inline-size: 52rem;
   width: 100%;
 }
 
+/* No rule of its own: this is the panel's first child, so a border here lands
+   1px under the panel's own top edge and the pair renders as one 2px line. */
 .fieldGrid {
-  border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* One field is not a region, so nothing divides these but their own padding —
+   1.2rem a side puts a 2.4rem gutter between adjacent fields. */
 .fieldGrid > label,
 .fieldGrid > fieldset {
   align-content: start;
-  border-bottom: 1px solid var(--line);
-  padding: 1rem;
-}
-
-.fieldGrid > label:nth-child(odd),
-.fieldGrid > fieldset:nth-child(odd) {
-  border-right: 1px solid var(--line);
+  padding: 1.2rem;
 }
 
 .fieldGrid input,
@@ -43,8 +42,8 @@
   inline-size: 100%;
 }
 
-/* A control's width is a hint about the answer it wants. Stretched to the full
-   column, a two-digit age sat in a 600px box. */
+/* A control's width is a hint about the answer it wants, and this one wants two
+   digits. Stretched to the full column it would promise a much longer answer. */
 .fieldGrid > label > input[type='number'] {
   max-inline-size: 9rem;
 }
@@ -76,8 +75,23 @@
   position: relative;
 }
 
+/* `appearance: textfield` drops the spinner in Firefox; the pseudo-elements below
+   do it in Chrome and Safari. The browser draws that spinner at the input's right
+   edge, which is where the unit label sits — and the label has no background, so
+   the arrows read through the word. On a form taking both mmol/L and mmHg the
+   unit is the one thing that has to stay legible.
+
+   Arrow keys still step the value, so only the buttons go. Scoped to these
+   fields: the age spinner is useful and stays. */
 .inputWithUnit input {
+  appearance: textfield;
   padding-right: 5.8rem;
+}
+
+.inputWithUnit input::-webkit-inner-spin-button,
+.inputWithUnit input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
 }
 
 .inputWithUnit b {
@@ -146,10 +160,12 @@
 
 /* ------------------------------------------------------- input cards --- */
 
+/* Unbordered, like the fields in `.fieldGrid`: the padding is the separation.
+   The rule that starts each question group lives on `.groupHead` instead, so the
+   line marks the group rather than repeating on every card in it. */
 .inputCard {
   align-content: start;
   background: var(--white);
-  border-bottom: 1px solid var(--line);
   display: grid;
   gap: 0.65rem;
   min-height: 8.9rem;
@@ -166,11 +182,10 @@
   padding-right: 0;
 }
 
-/* Deliberately no `line-height` or `min-height` override here. Both were
-   compensating for the old rendered-legend behaviour (see the `float` note in
-   styles.scss); with a legend laying out as an ordinary grid item they instead
-   made the radio groups start 3px above the number inputs in the row below.
-   Inheriting the same metrics as a plain label's title is what lines them up. */
+/* Deliberately no `line-height` or `min-height` override on the legend here. The
+   float in styles.scss makes it lay out as an ordinary grid item, so inheriting
+   the same metrics as a plain label's title is what lines a radio group up with
+   the number input beside it. Overriding either lifts it out of alignment. */
 
 /* --------------------------------------------------------- messaging --- */
 
@@ -179,7 +194,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.45;
-  padding: 0.9rem 1rem 0;
+  padding: 0.9rem 1.2rem 0;
 }
 
 /* Per-field message, sits under its own control. */
@@ -195,6 +210,12 @@
 }
 
 /* ----------------------------------------------------------- actions --- */
+
+/* The same 1.2rem inset the fields use, so the button's left edge lines up with
+   the field labels above it. */
+.actions {
+  margin: 0 1.2rem 1.2rem;
+}
 
 .primaryAction {
   align-items: center;

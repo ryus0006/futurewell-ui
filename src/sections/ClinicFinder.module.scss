@@ -11,33 +11,32 @@
 
 /* ---------------------------------------------------------- toolbar --- */
 
+/* One rule, marking where the controls start. The filters inside it are fields,
+   not regions, so the column gap separates them. */
 .toolbar {
   align-items: end;
   border-top: 1px solid var(--line);
   display: grid;
-  gap: 0;
+  gap: 1.1rem;
   grid-template-columns: minmax(150px, 0.75fr) repeat(3, minmax(180px, 1fr)) auto;
   margin-top: 0.4rem;
+  padding: 1rem 0;
   width: 100%;
 }
 
 .toolbar strong {
   align-items: center;
-  border-bottom: 1px solid var(--line);
   color: var(--ink);
   display: flex;
   font-size: 0.95rem;
   font-weight: 600;
-  min-height: 4.8rem;
-  padding: 0.85rem;
+  min-height: var(--control-height);
+  padding: 0;
 }
 
 .toolbar label {
-  border-bottom: 1px solid var(--line);
-  border-left: 1px solid var(--line);
   gap: 0.35rem;
-  min-height: 4.8rem;
-  padding: 0.65rem;
+  padding: 0;
 }
 
 .toolbar input,
@@ -68,7 +67,7 @@
 /* ------------------------------------------------------------- map --- */
 
 .finder {
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
   margin-top: 1rem;
@@ -112,13 +111,13 @@
    the anchor offset, so `iconSize` has to stay the single source of the size.
 
    `:global(.leaflet-marker-icon)` is not decoration. leaflet.css sets
-   `display: block` on that class, at the same specificity as this rule and from
-   a stylesheet imported afterwards — so it won, the flex centring never applied,
-   and the digits sat 18px left and 14px above the middle of the circle. */
+   `display: block` on that class from a stylesheet imported after this one, so
+   without the extra selector the two rules tie on specificity and leaflet's
+   wins — taking `display: flex` with it, and the centring of the digits. */
 .cluster:global(.leaflet-marker-icon) {
   align-items: center;
   background: var(--teal);
-  border: 4px solid rgba(0, 124, 137, 0.28);
+  border: 4px solid rgba(11, 110, 99, 0.28);
   border-radius: 999px;
   color: #fff;
   display: flex;
@@ -292,15 +291,15 @@
     grid-template-columns: 1fr 1fr;
   }
 
+  /* The count aligns to a control's height only while it shares a row with one.
+     On a row of its own that height is just dead space. */
   .toolbar strong {
     grid-column: 1 / -1;
-    /* 4.8rem exists to match the height of a label + its control on one row.
-       Once the count is on a row of its own, that is just dead space. */
-    min-height: 3.2rem;
+    min-height: auto;
   }
 
-  /* Three filters into two columns leaves the third beside an empty cell, and
-     the empty cell's missing border stops the row's underline half way across. */
+  /* Three filters into two columns leaves the third beside an empty cell. Given
+     the full row instead, it reads as the last filter rather than as a gap. */
   .toolbar label:nth-of-type(3) {
     grid-column: 1 / -1;
   }
@@ -326,13 +325,8 @@
 }
 
 @media (max-width: 760px) {
-  /* One column, like both forms at this width. The vertical borders that
-     separated the toolbar cells have nothing to separate any more. */
+  /* One column, like both forms at this width. */
   .toolbar {
     grid-template-columns: 1fr;
-  }
-
-  .toolbar label {
-    border-left: 0;
   }
 }

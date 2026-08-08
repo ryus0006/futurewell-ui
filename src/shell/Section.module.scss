@@ -2,8 +2,9 @@
 .stage {
   display: grid;
   /* Not the default `auto`: an auto track sizes to its items' min-content and
-     grows past its container, which is what the Leaflet map did. `min-width: 0`
-     on the items is not enough — the track itself is what grows. */
+     grows past its container, which a Leaflet map is wide enough to trigger.
+     `min-width: 0` on the items is not enough — the track itself is what
+     grows. */
   grid-template-columns: minmax(0, 1fr);
   min-width: 0;
   padding-top: clamp(1.75rem, 3vw, 2.5rem);
@@ -15,7 +16,26 @@
   outline: none;
 }
 
+/* Every screen change unmounts one section and mounts the next, so this runs on
+   arrival rather than needing to be triggered.
+
+   It exists for consistency, not for effect. A step whose button sits below the
+   fold arrives behind the smooth scroll in `App`; a step whose button is already
+   on screen has nothing to scroll and would otherwise appear with no movement at
+   all. Short enough that it never delays reading, and opacity only — a transform
+   here would fight the same scroll. */
+@keyframes screen-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .section {
+  animation: screen-in 140ms ease-out both;
   display: block;
 }
 
@@ -62,7 +82,7 @@
 
 .placeholder {
   background: var(--white);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-line);
   color: var(--stone);
   padding: clamp(1.2rem, 2.6vw, 2rem);

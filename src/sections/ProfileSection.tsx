@@ -5,7 +5,7 @@ import { useAssessment } from '../core/store/assessment';
 import { Section } from '../shell/Section';
 import { SECTIONS } from '../shell/sections';
 import form from './Form.module.scss';
-import { AGE_INPUT_BOUNDS, validateAge } from './validation';
+import { AGE_INPUT_BOUNDS, isAgeEntry, validateAge } from './validation';
 
 interface ProfileSectionProps {
   /** Passed explicitly, so the caller need not re-read the store. */
@@ -53,7 +53,7 @@ export function ProfileSection({ onContinue }: ProfileSectionProps) {
         <div className={form.fieldGrid}>
           <label htmlFor="profile-age">
             Age
-            <small className={form.hint}>For adults aged 41 to 59</small>
+            <small className={form.hint}>For adults aged 30 to 79</small>
             <input
               id="profile-age"
               name="age"
@@ -64,7 +64,16 @@ export function ProfileSection({ onContinue }: ProfileSectionProps) {
               step={1}
               placeholder="e.g. 53"
               value={age}
-              onChange={(e) => setAge(e.target.value)}
+              /* Refuses anything that cannot become an accepted age, so the
+                 field can hold no value outside the band however it is entered
+                 — typed, pasted, or stepped. */
+              onChange={(e) => {
+                const next = e.target.value;
+                if (isAgeEntry(next)) {
+                  setAge(next);
+                  setAgeError('');
+                }
+              }}
               onBlur={() => setAgeError(validateAge(age))}
               className={ageError ? form.invalid : undefined}
               aria-invalid={ageError ? true : undefined}
@@ -113,7 +122,7 @@ export function ProfileSection({ onContinue }: ProfileSectionProps) {
           {ageError || sexError ? 'Check the highlighted answers above.' : ''}
         </p>
 
-        <div style={{ margin: '0 1rem 1rem' }}>
+        <div className={form.actions}>
           <button className={form.primaryAction} type="submit">
             See why it matters
           </button>

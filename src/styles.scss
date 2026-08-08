@@ -101,7 +101,13 @@
 
   /* Neutral by default. Borders, headings and information surfaces are ink,
      stone and warm grey; the neutrals carry the contrast so hue does not have
-     to. Warm, so nothing on the page reads as hospital-admin blue. */
+     to. Warm, so nothing on the page reads as hospital-admin blue.
+
+     The two line weights are a hierarchy, not two shades to choose between.
+     `--line-strong` draws the edge of a self-contained object — a panel, the
+     map, a control. `--line` divides regions inside one. Anything below a
+     region — field from field, card from card — is separated by space alone,
+     so nesting stays readable instead of flattening into graph paper. */
   --ink: #1b1917;
   --stone: #6b655d;
   --line: #dcd7ce;
@@ -112,7 +118,9 @@
   --white: #ffffff;
 
   /* Teal means one thing: you can act on it. Buttons, links, focus rings and
-     reachable steps — nothing decorative. */
+     reachable steps — nothing decorative. The wordmark is the single exception:
+     it names the site rather than describing anything on the page, so it sits
+     outside the state palette the rest of the colour rules govern. */
   --teal: #0b6e63;
   --teal-deep: #0a5c53;
 

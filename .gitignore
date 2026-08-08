@@ -35,6 +35,20 @@ yarn-error.log
 # Working notes, kept local
 PLAN.md
 
+# Automated tests, kept local
+*.test.ts
+*.test.tsx
+/src/test/
+
+# Mock backend, kept local. `dev-setup.ts` starts it and `vite.config.local.ts`
+# is the only thing that loads it, so no tracked file refers to any of this and
+# the app still builds from a clean clone:
+#   npx vite --config vite.config.local.ts
+/src/core/api/mock/
+/src/dev-setup.ts
+/vite.config.local.ts
+/public/mockServiceWorker.js
+
 # Miscellaneous
 .sass-cache/
 /connect.lock

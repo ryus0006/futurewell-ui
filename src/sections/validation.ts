@@ -13,19 +13,45 @@ export interface RangeRule {
   step?: number;
 }
 
-export const AGE_RULE: RangeRule = { min: 41, max: 59, label: 'Age' };
+export const AGE_RULE: RangeRule = { min: 30, max: 79, label: 'Age' };
 
 /**
- * What the age spinner may reach — not who the assessment is for. `AGE_RULE` is
- * still the gate, and `min`/`max` do not stop anyone typing a value outside
- * them, so someone aged 35 can still enter it and be told why it does not
- * apply. These bounds only keep the up/down arrows inside plausible ages: with
- * no `min` at all, one click below zero produced -1.
- *
- * 100 rather than something nearer the band: a tighter ceiling would read as a
- * clinical boundary, and the frontend owns none.
+ * Bounds for the field's own `min`/`max`, so the spinner arrows can only step
+ * onto an accepted age. Without them the arrows walk past either end of the
+ * band, including below zero.
  */
-export const AGE_INPUT_BOUNDS = { min: 18, max: 100 } as const;
+export const AGE_INPUT_BOUNDS = { min: AGE_RULE.min, max: AGE_RULE.max } as const;
+
+const AGE_DIGITS = String(AGE_RULE.max).length;
+
+/**
+ * Whether `raw` may be *in* the age field — either an accepted age already, or a
+ * prefix that can still be completed into one. Guards typing and pasting, which
+ * `min`/`max` do not.
+ *
+ * A partial entry has to be allowed through or the field cannot be typed into:
+ * reaching 35 means passing through "3". So "3" is accepted because 30-39 exist,
+ * while "8" is refused outright because every 8x is past the ceiling.
+ *
+ * Refusing the keystroke rather than clamping is deliberate. Silently turning a
+ * 25-year-old's entry into 31 would hand them an estimate calculated for someone
+ * else, and they would have no way to tell.
+ */
+export function isAgeEntry(raw: string): boolean {
+  if (raw === '') return true;
+  if (!new RegExp(`^\\d{1,${AGE_DIGITS}}$`).test(raw)) return false;
+
+  const value = Number(raw);
+  const inBand = (n: number) => n >= AGE_RULE.min && n <= AGE_RULE.max;
+  if (inBand(value)) return true;
+
+  // Still short of full length, so check whether any completion lands in the band.
+  const remaining = AGE_DIGITS - raw.length;
+  if (remaining === 0) return false;
+  const low = value * 10 ** remaining;
+  const high = low + 10 ** remaining - 1;
+  return high >= AGE_RULE.min && low <= AGE_RULE.max;
+}
 
 export const RISK_RULES = {
   systolicBp: { min: 80, max: 240, label: 'Systolic blood pressure', unit: 'mmHg', step: 1 },

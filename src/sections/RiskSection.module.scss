@@ -1,6 +1,7 @@
+/* The mist ground is what sets this strip apart from the questions below it, so
+   it needs no rule of its own — and the group head under it already draws one. */
 .carried {
   background: var(--mist);
-  border-bottom: 1px solid var(--line);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -10,10 +11,6 @@
   gap: 0.25rem;
   min-height: 5.1rem;
   padding: 1rem 1.2rem;
-}
-
-.carried div:first-of-type {
-  border-right: 1px solid var(--line);
 }
 
 .carried span {
@@ -34,13 +31,15 @@
 
 /* ---------------------------------------------------- answerability --- */
 
+/* The one interior rule in the form, and it means "a new group of questions
+   starts here". A matching rule underneath would box the heading in with its own
+   description, which is the opposite of what it is doing. */
 .groupHead {
   background: var(--white);
-  border-bottom: 1px solid var(--line);
   border-top: 1px solid var(--line);
   display: grid;
   gap: 0.35rem;
-  padding: 1.4rem 1.2rem 1.1rem;
+  padding: 1.8rem 1.2rem 0.6rem;
 }
 
 .groupHead h3 {
@@ -61,10 +60,6 @@
 .cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.cards > *:nth-child(odd) {
-  border-right: 1px solid var(--line);
 }
 
 /* The way out of group 2 for anyone without lab values. */
@@ -88,14 +83,6 @@
   .cards,
   .actions {
     grid-template-columns: 1fr;
-  }
-
-  .carried div:first-of-type {
-    border-right: 0;
-  }
-
-  .cards > *:nth-child(odd) {
-    border-right: 0;
   }
 
   .actions > button {

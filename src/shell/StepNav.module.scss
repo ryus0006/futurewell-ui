@@ -17,16 +17,36 @@
 }
 
 /* The rule under each step is the connector. Lines between markers would have
-   to be anchored to labels of unequal width; a rule that fills cannot break. */
+   to be anchored to labels of unequal width; a rule that fills cannot break.
+   The border is the unfilled track; the teal length is drawn over it below. */
 .item {
-  border-bottom: 3px solid var(--line);
+  border-bottom: 2px solid var(--line);
   flex: 1 1 0;
   min-width: 0;
+  position: relative;
 }
 
-.done,
-.current {
-  border-bottom-color: var(--teal);
+/* Drawn rather than switched on. Advancing sweeps the teal across the segment
+   just completed, and going back retracts it — the one place in the app where
+   moving forward and moving back are told apart by anything but the labels.
+   `transform` rather than width: it composites, so a step change never reflows
+   the labels sitting on top of it. */
+.item::after {
+  background: var(--teal);
+  bottom: -2px;
+  content: '';
+  height: 2px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms ease-out;
+}
+
+.done::after,
+.current::after {
+  transform: scaleX(1);
 }
 
 .link {
@@ -48,12 +68,16 @@
   cursor: default;
 }
 
-/* The wordmark's rotated square at marker scale; hollow until reached. */
+/* The wordmark's rotated square at marker scale; hollow until reached. Fills on
+   the same timing as the rule beneath, so the two read as one movement. */
 .marker {
   border: 2px solid var(--line-strong);
   flex: 0 0 auto;
   height: 0.62rem;
   transform: rotate(45deg);
+  transition:
+    background-color 260ms ease-out,
+    border-color 260ms ease-out;
   width: 0.62rem;
 }
 
@@ -67,7 +91,7 @@
 .current .marker {
   background: var(--teal);
   border-color: var(--teal);
-  box-shadow: 0 0 0 4px rgba(0, 124, 137, 0.18);
+  box-shadow: 0 0 0 4px rgba(11, 110, 99, 0.18);
 }
 
 .label {
@@ -77,8 +101,10 @@
   min-width: 0;
 }
 
+/* Neutral, not teal. The number names the step; it does not report anything
+   about it. The marker and the rule beneath are what carry the state. */
 .step {
-  color: var(--teal-deep);
+  color: var(--stone);
   flex: 0 0 auto;
   font-size: 0.75rem;
   font-weight: 700;
@@ -122,9 +148,19 @@
   }
 
   /* Four labels do not fit, and truncating all four tells the reader nothing.
-     Only the current step keeps its name; the rest stay as markers. */
+     Only the current step keeps its name; the rest stay as markers.
+
+     The rule goes with them: an item sized to a bare marker draws too short a
+     segment to read as a bar, and four of them read as stray dashes. Filled
+     against hollow markers still says how far along you are. */
   .item {
+    border-bottom: 0;
     flex: 0 0 auto;
+  }
+
+  /* No track to draw on at this width. */
+  .item::after {
+    content: none;
   }
 
   .current {
