@@ -1,0 +1,79 @@
+/* Holds one screen at a time. No gap: the back control sets its own spacing. */
+.stage {
+  display: grid;
+  /* Not the default `auto`: an auto track sizes to its items' min-content and
+     grows past its container, which is what the Leaflet map did. `min-width: 0`
+     on the items is not enough — the track itself is what grows. */
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* Focused on every move between screens. An outline ringing the whole screen
+   reads as a rendering fault rather than as focus. */
+.stage:focus {
+  outline: none;
+}
+
+.section {
+  display: block;
+}
+
+/* Same reason as `.stage:focus` above. */
+.section:focus {
+  outline: none;
+}
+
+/* Outside the numbered flow: a tool reachable at any point should not shout as
+   loudly as a stage of the assessment. */
+.standalone .head h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* The rule is structure, not decoration, so it stays neutral. */
+.head {
+  border-left: 2px solid var(--line-strong);
+  display: grid;
+  gap: 0.7rem;
+  margin-bottom: clamp(1.4rem, 3vw, 2rem);
+  padding-left: clamp(0.9rem, 1.6vw, 1.15rem);
+}
+
+/* The serif carries the size, so weight does not have to. Tracking stays close
+   to normal — the letters need their sidebearings at this size. */
+.head h2 {
+  color: var(--ink);
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.1;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+
+/* Prose, so it takes the reading face rather than the interface one. */
+.lede {
+  color: var(--stone);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+  line-height: 1.6;
+  max-width: 54ch;
+}
+
+.placeholder {
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-line);
+  color: var(--stone);
+  padding: clamp(1.2rem, 2.6vw, 2rem);
+}
+
+@media (max-width: 760px) {
+  .stage {
+    padding-top: 1.4rem;
+  }
+
+  .head h2 {
+    font-size: 1.85rem;
+  }
+}

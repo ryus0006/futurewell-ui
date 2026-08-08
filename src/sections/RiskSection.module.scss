@@ -1,0 +1,104 @@
+.carried {
+  background: var(--mist);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.carried div {
+  display: grid;
+  gap: 0.25rem;
+  min-height: 5.1rem;
+  padding: 1rem 1.2rem;
+}
+
+.carried div:first-of-type {
+  border-right: 1px solid var(--line);
+}
+
+.carried span {
+  color: var(--stone);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.carried strong {
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------- answerability --- */
+
+.groupHead {
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.4rem 1.2rem 1.1rem;
+}
+
+.groupHead h3 {
+  color: var(--ink);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+.groupHead p {
+  color: var(--stone);
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cards > *:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+/* The way out of group 2 for anyone without lab values. */
+.exit {
+  color: var(--stone);
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+.actions {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 1rem 1.2rem 1.2rem;
+}
+
+@media (max-width: 760px) {
+  .carried,
+  .cards,
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .carried div:first-of-type {
+    border-right: 0;
+  }
+
+  .cards > *:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .actions > button {
+    width: 100%;
+  }
+}

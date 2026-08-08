@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="FutureWell preventive heart-health prototype for Malaysian adults aged 41 to 59, with population awareness, cardiovascular risk context, practical guidance, and public clinic finder."
+    />
+    <title>FutureWell</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#profile" data-route="profile" aria-label="FutureWell profile">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span>FutureWell</span>
+        </a>
+      </header>
+
+      <main class="workspace">
+        <section class="flow-hero" aria-label="Assessment steps">
+          <nav class="step-nav">
+            <button class="step-link is-active" type="button" data-route="profile">
+              <span>01</span>
+              <strong>Basic Profile</strong>
+            </button>
+            <button class="step-link" type="button" data-route="awareness">
+              <span>02</span>
+              <strong>Awareness</strong>
+            </button>
+            <button class="step-link" type="button" data-route="risk">
+              <span>03</span>
+              <strong>Risk Profile</strong>
+            </button>
+            <button class="step-link" type="button" data-route="recommendation">
+              <span>04</span>
+              <strong>Recommendation</strong>
+            </button>
+          </nav>
+        </section>
+
+        <section class="screen-stage">
+          <section class="view is-active" id="profile" data-title="Basic profile">
+            <div class="screen-head">
+              <p class="eyebrow">Step 01 | Basic profile</p>
+              <h2>Tell us about you.</h2>
+              <p>
+                A few basics help FutureWell tailor the heart-health view for adults aged 41 to 59.
+              </p>
+            </div>
+
+            <form class="panel profile-form" id="basicProfileForm" novalidate>
+              <div class="field-grid profile-grid">
+                <label>
+                  Age
+                  <small>For adults aged 41 to 59</small>
+                  <input type="number" name="age" value="53" min="41" max="59" required aria-describedby="profileError" />
+                </label>
+                <fieldset>
+                  <legend>Sex</legend>
+                  <div class="segmented">
+                    <label><input type="radio" name="sex" value="male" checked /> Male</label>
+                    <label><input type="radio" name="sex" value="female" /> Female</label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <p class="form-error" id="profileError" aria-live="polite"></p>
+
+              <button class="primary-action" type="submit">
+                <i data-lucide="arrow-right"></i>
+                Continue to awareness
+              </button>
+            </form>
+          </section>
+
+          <section class="view" id="awareness" data-title="Heart health awareness">
+            <div class="screen-head">
+              <p class="eyebrow">Step 02 | Awareness</p>
+              <h2>Know why it matters.</h2>
+              <p>
+                A simple pictograph shows the population context before your clinical inputs.
+              </p>
+            </div>
+
+            <article class="awareness-pictograph" role="figure" aria-label="Pictograph showing heart disease as a share of deaths in Malaysia">
+              <div class="picto-grid" id="pictoGrid" aria-hidden="true"></div>
+
+              <div class="picto-key" aria-label="Pictograph legend">
+                <strong id="ratioText">About 1 in 4 deaths</strong>
+                <span><i class="swatch heart-disease"></i> Heart disease</span>
+                <span><i class="swatch other-causes"></i> Other causes</span>
+              </div>
+
+              <div class="picto-callout" id="awarenessCallout">
+                You're <strong>53</strong>. For Malaysian men aged 41 to 59, ischaemic heart disease is the
+                <strong>number one</strong> cause of death, at 24.8%.
+              </div>
+
+              <p class="picto-pivot">
+                <b>The good news:</b> much of this risk is preventable. Next, let's look at yours.
+              </p>
+
+              <p class="picto-source">
+                Source: Department of Statistics Malaysia (DOSM), Statistics on Causes of Death Malaysia 2023
+                (medically certified deaths, men aged 41 to 59, Table 10.2).
+              </p>
+
+              <div class="reference-data" aria-label="DOSM 2023 reference data used by this prototype">
+                <strong>Reference data used</strong>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Group</th>
+                      <th>Heart-disease share</th>
+                      <th>Plain-language meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody id="awarenessReferenceRows"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <button class="primary-action next-action" type="button" data-route="risk">
+              <i data-lucide="clipboard-list"></i>
+              Continue to risk profile
+            </button>
+          </section>
+
+          <section class="view" id="risk" data-title="Cardiovascular risk profile">
+            <div class="screen-head">
+              <p class="eyebrow">Step 03 | Risk profile</p>
+              <h2>Check your heart risk.</h2>
+              <p>
+                Age and sex come from Basic Profile. Complete the remaining 6 clinical questions for the 8-input risk profile.
+              </p>
+            </div>
+
+            <form class="panel risk-form" id="riskProfileForm" novalidate>
+              <div class="carried-profile" aria-label="Profile values carried into risk analysis">
+                <input type="hidden" name="age" value="53" />
+                <input type="hidden" name="sex" value="male" />
+                <div>
+                  <span>Carried from Basic Profile</span>
+                  <strong id="carriedAge">Age 53</strong>
+                </div>
+                <div>
+                  <span>Carried from Basic Profile</span>
+                  <strong id="carriedSex">Male</strong>
+                </div>
+              </div>
+              <div class="input-card">
+                <label>
+                  Systolic blood pressure
+                  <span class="input-with-unit">
+                    <input type="number" name="systolic_bp" value="145" min="80" max="240" required />
+                    <b>mmHg</b>
+                  </span>
+                </label>
+              </div>
+              <div class="input-card">
+                <label>
+                  Total cholesterol
+                  <span class="input-with-unit">
+                    <input type="number" name="total_cholesterol" value="5.5" min="2" max="12" step="0.1" required />
+                    <b>mmol/L</b>
+                  </span>
+                </label>
+              </div>
+              <div class="input-card">
+                <label>
+                  HDL cholesterol
+                  <span class="input-with-unit">
+                    <input type="number" name="hdl_cholesterol" value="1.2" min="0.3" max="4" step="0.1" required />
+                    <b>mmol/L</b>
+                  </span>
+                </label>
+              </div>
+              <div class="input-card">
+                <fieldset>
+                  <legend>Current smoker</legend>
+                  <div class="segmented compact">
+                    <label><input type="radio" name="smoking" value="true" checked /> Yes</label>
+                    <label><input type="radio" name="smoking" value="false" /> No</label>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="input-card">
+                <fieldset>
+                  <legend>Has diabetes</legend>
+                  <div class="segmented compact">
+                    <label><input type="radio" name="diabetes" value="true" /> Yes</label>
+                    <label><input type="radio" name="diabetes" value="false" checked /> No</label>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="input-card">
+                <fieldset>
+                  <legend>Taking blood-pressure medication</legend>
+                  <div class="segmented compact">
+                    <label><input type="radio" name="bp_treated" value="true" checked /> Yes</label>
+                    <label><input type="radio" name="bp_treated" value="false" /> No</label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <p class="form-error risk-error" id="riskError" aria-live="polite"></p>
+
+              <div class="risk-actions">
+                <button class="secondary-action" type="button" id="riskReset">
+                  Reset to default
+                </button>
+                <button class="primary-action full" type="submit">
+                  <i data-lucide="activity"></i>
+                  Analyse risk and show recommendation
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <section class="view" id="recommendation" data-title="Recommendation">
+            <div class="screen-head">
+              <p class="eyebrow">Step 04 | Recommendation</p>
+              <h2>Your next steps.</h2>
+            </div>
+
+            <div class="recommendation-grid">
+              <article class="panel result-panel">
+                <p class="panel-label">Cardiovascular risk result</p>
+                <div class="risk-output">
+                  <strong id="riskScore">Medium</strong>
+                  <span id="riskPercent">48%</span>
+                </div>
+                <div class="meter"><span id="riskMeter"></span></div>
+                <p id="riskReason">Complete the risk profile to generate a recommendation.</p>
+                <div class="risk-context" id="riskContext" hidden></div>
+                <p class="sample-note" id="sampleRiskNote" hidden>
+                  Prototype note: this frontend draft shows an illustrative sample estimate. The final product will use the backend risk model.
+                </p>
+                <p class="model-note" id="modelNote" hidden>
+                  This uses a validated cardiovascular risk model based on the Framingham General CVD Risk
+                  approach. It is useful for prevention conversations, but may not be calibrated for every
+                  population. Source: D'Agostino et al., General Cardiovascular Risk Profile for Use in
+                  Primary Care, Framingham Heart Study.
+                </p>
+                <p class="disclaimer" id="riskDisclaimer" hidden>
+                  This estimate is for general information only. It is not a medical diagnosis or a substitute for professional advice. It uses a recognised international risk model that may not be calibrated for every population. Talk to a doctor or visit a Klinik Kesihatan about your heart health.
+                </p>
+                <button class="secondary-action care-action" type="button" id="findCareAction" hidden>
+                  Find care near you
+                </button>
+              </article>
+
+              <article class="panel summary-panel">
+                <p class="panel-label">AI-personalised guidance summary</p>
+                <strong class="ai-summary-badge">AI summary mock</strong>
+                <p id="guidanceSummary">
+                  Complete the risk profile to receive a short AI-personalised summary based only on your selected tips.
+                </p>
+              </article>
+
+              <article class="panel">
+                <p class="panel-label">Dietary recommendation</p>
+                <div class="recommendation-list" id="dietList"></div>
+              </article>
+
+              <article class="panel">
+                <p class="panel-label">Lifestyle recommendation</p>
+                <div class="recommendation-list" id="lifestyleList"></div>
+              </article>
+
+              <article class="panel facility-panel" id="facilityPanel">
+                <p class="panel-label">Public clinic finder</p>
+                <div class="clinic-toolbar" aria-label="Clinic search controls">
+                  <strong id="clinicResultCount">2,915 clinics shown</strong>
+                  <label>
+                    Search
+                    <input id="clinicSearch" type="search" value="" placeholder="Clinic, town or district" />
+                  </label>
+                  <label>
+                    State
+                    <select id="clinicStateFilter">
+                      <option value="all">All states</option>
+                      <option value="Kuala Lumpur">Kuala Lumpur</option>
+                      <option value="Selangor">Selangor</option>
+                      <option value="Penang">Penang</option>
+                      <option value="Johor">Johor</option>
+                    </select>
+                  </label>
+                  <label>
+                    Clinic type
+                    <select id="clinicTypeFilter">
+                      <option value="all">All clinic types</option>
+                      <option value="Klinik Kesihatan">Klinik Kesihatan</option>
+                      <option value="Hospital">Hospital</option>
+                      <option value="Community Clinic">Community Clinic</option>
+                    </select>
+                  </label>
+                  <button id="clinicReset" type="button">Reset</button>
+                </div>
+                <div class="facility-finder">
+                  <div class="clinic-map" id="clinicMap" aria-label="Map of active public clinic locations in Malaysia"></div>
+                  <div class="clinic-detail">
+                    <span class="map-kicker">Select a clinic</span>
+                    <h3 id="clinicPanelTitle">Choose a marker to inspect it.</h3>
+                    <p id="clinicPanelText">Locations come from the MoH public-facility registry dated 31 December 2025.</p>
+                    <div class="clinic-type-list" id="clinicTypeList">
+                      <div><span>DESA</span><strong>1,573</strong></div>
+                      <div><span>KESIHATAN</span><strong>1,112</strong></div>
+                      <div><span>KOMUNITI</span><strong>160</strong></div>
+                      <div><span>KESIHATAN IBU DAN ANAK</span><strong>70</strong></div>
+                    </div>
+                    <div class="facility-list" id="facilityList"></div>
+                    <div class="clinic-source">
+                      Coverage includes active public clinics in the MoH registry, not private clinics. Please confirm available services before visiting.
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

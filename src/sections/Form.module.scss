@@ -1,0 +1,290 @@
+/* Form chrome shared by ProfileSection and RiskSection. Both import this module
+   rather than duplicating it. */
+
+.panel {
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-line);
+  display: grid;
+  gap: 0;
+  /* Capped for the same reason as `.stage` in Section.module.scss: an auto
+     track grows past its container to fit its item's min-content. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Capped to its content. Left at the full workspace width, a two-field form
+     put a 9rem control in a 540px cell and the empty half read as unfinished. */
+  max-inline-size: 52rem;
+  width: 100%;
+}
+
+.fieldGrid {
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fieldGrid > label,
+.fieldGrid > fieldset {
+  align-content: start;
+  border-bottom: 1px solid var(--line);
+  padding: 1rem;
+}
+
+.fieldGrid > label:nth-child(odd),
+.fieldGrid > fieldset:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+.fieldGrid input,
+.fieldGrid select,
+.fieldGrid .segmented,
+.inputCard input,
+.inputCard .segmented,
+.inputCard .inputWithUnit {
+  inline-size: 100%;
+}
+
+/* A control's width is a hint about the answer it wants. Stretched to the full
+   column, a two-digit age sat in a 600px box. */
+.fieldGrid > label > input[type='number'] {
+  max-inline-size: 9rem;
+}
+
+.inputWithUnit {
+  max-inline-size: 15rem;
+}
+
+.fieldGrid .segmented,
+.inputCard .segmented {
+  max-inline-size: 21rem;
+}
+
+/* The note under a field title. Self-contained rather than leaning on a
+   `label small` element rule, because it has to look identical inside a
+   <fieldset>, where that selector would not match. */
+.hint {
+  color: var(--stone);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.35;
+  margin-top: -0.25rem;
+}
+
+/* ------------------------------------------------------- unit suffix --- */
+
+.inputWithUnit {
+  display: block;
+  position: relative;
+}
+
+.inputWithUnit input {
+  padding-right: 5.8rem;
+}
+
+.inputWithUnit b {
+  align-items: center;
+  border-left: 1px solid var(--line);
+  color: var(--stone);
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 600;
+  height: calc(100% - 2px);
+  padding: 0 0.78rem;
+  pointer-events: none;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+}
+
+/* --------------------------------------------------- segmented radios --- */
+
+.segmented {
+  align-content: start;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: var(--control-height);
+  width: 100%;
+}
+
+.segmented label {
+  align-items: center;
+  background: var(--field);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 400;
+  gap: 0.5rem;
+  height: var(--control-height);
+  min-height: var(--control-height);
+  padding: 0.8rem 0.9rem;
+  transition: background 120ms ease;
+}
+
+.segmented label:hover {
+  background: var(--mist);
+}
+
+.segmented label:has(input:checked) {
+  background: rgba(11, 110, 99, 0.09);
+  border-color: var(--teal);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.segmented label + label {
+  border-left: 0;
+}
+
+.segmented input {
+  accent-color: var(--teal);
+  height: 1rem;
+  min-height: auto;
+  padding: 0;
+  width: 1rem;
+}
+
+/* ------------------------------------------------------- input cards --- */
+
+.inputCard {
+  align-content: start;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 0.65rem;
+  min-height: 8.9rem;
+  padding: 1.2rem;
+  position: relative;
+}
+
+/* Direct children only. A bare `.inputCard label` would also match the labels
+   inside `.segmented`, and — same specificity, later in the file — would beat
+   `.segmented label`, stacking each radio above its own Yes/No text. */
+.inputCard > label,
+.inputCard > fieldset {
+  align-content: start;
+  padding-right: 0;
+}
+
+/* Deliberately no `line-height` or `min-height` override here. Both were
+   compensating for the old rendered-legend behaviour (see the `float` note in
+   styles.scss); with a legend laying out as an ordinary grid item they instead
+   made the radio groups start 3px above the number inputs in the row below.
+   Inheriting the same metrics as a plain label's title is what lines them up. */
+
+/* --------------------------------------------------------- messaging --- */
+
+.formError {
+  color: var(--alert);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  padding: 0.9rem 1rem 0;
+}
+
+/* Per-field message, sits under its own control. */
+.fieldError {
+  color: var(--alert);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.invalid {
+  border-color: var(--alert);
+}
+
+/* ----------------------------------------------------------- actions --- */
+
+.primaryAction {
+  align-items: center;
+  background: var(--teal);
+  border: 1px solid var(--teal);
+  color: #fff;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 600;
+  gap: 0.6rem;
+  justify-content: center;
+  letter-spacing: 0.005em;
+  min-height: var(--control-height);
+  padding: 0.9rem 1.6rem;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.primaryAction:hover {
+  background: var(--teal-deep);
+  border-color: var(--teal-deep);
+}
+
+.primaryAction:active {
+  transform: translateY(1px);
+}
+
+.primaryAction:disabled {
+  background: var(--stone);
+  border-color: var(--stone);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.secondaryAction {
+  background: var(--white);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: var(--control-height);
+  padding: 0.9rem 1.6rem;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.secondaryAction:hover {
+  background: var(--mist);
+  border-color: var(--teal);
+}
+
+.secondaryAction:active {
+  transform: translateY(1px);
+}
+
+/* A button that reads as a link — used where the action sits inside a sentence
+   and a full control would break the line. Still a `<button>`, because it
+   performs an action rather than navigating. */
+.linkAction {
+  background: none;
+  border: 0;
+  color: var(--teal-deep);
+  font-size: inherit;
+  font-weight: 600;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.linkAction:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 760px) {
+  .fieldGrid,
+  .segmented {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldGrid > label:nth-child(odd),
+  .fieldGrid > fieldset:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .segmented label + label {
+    border-left: 1px solid var(--line-strong);
+    border-top: 0;
+  }
+}

@@ -1,0 +1,84 @@
+.panel {
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-line);
+  display: grid;
+  gap: 0.9rem;
+  /* `minmax(0, 1fr)`, not the default `auto` — see the note on `.stage` in
+     Section.module.scss. An auto track grows to its item's min-content, which
+     the reference table's `min-width: 32rem` propagates all the way up, so the
+     page gained a horizontal scrollbar on a phone while the table's own
+     `overflow-x: auto` sat there unused. */
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(1.2rem, 2.6vw, 2rem);
+}
+
+/* ---------------------------------------------------------- skeleton --- */
+
+.skeleton {
+  background: linear-gradient(90deg, var(--mist) 25%, rgba(201, 216, 223, 0.55) 50%, var(--mist) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 2px;
+  height: 1rem;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* A still block reads as "broken", not "loading" — so keep a visible base even
+   when animation is suppressed. The global reduced-motion rule kills the
+   animation; this keeps the shape legible. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--mist);
+  }
+}
+
+/* ------------------------------------------------------------- error --- */
+
+.error {
+  border-left: 3px solid var(--alert);
+  display: grid;
+  gap: 0.8rem;
+  justify-items: start;
+  padding-left: 1rem;
+}
+
+.error p {
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.retry {
+  background: var(--white);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-weight: 600;
+  min-height: 2.8rem;
+  padding: 0.6rem 1.1rem;
+}
+
+.retry:hover {
+  background: var(--mist);
+  border-color: var(--teal);
+}
+
+/* ------------------------------------------------------------- empty --- */
+
+.empty {
+  color: var(--stone);
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 1.2rem 0;
+  text-align: center;
+}

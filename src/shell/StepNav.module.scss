@@ -1,0 +1,151 @@
+/* Opaque for the same reason as `.topbar`. */
+.hero {
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-line);
+  margin: 0 calc(clamp(1rem, 3vw, 2.8rem) * -1);
+  padding: 0 clamp(1rem, 3vw, 2.8rem);
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 25;
+}
+
+.track {
+  display: flex;
+  list-style: none;
+  min-height: var(--stepnav-height);
+}
+
+/* The rule under each step is the connector. Lines between markers would have
+   to be anchored to labels of unequal width; a rule that fills cannot break. */
+.item {
+  border-bottom: 3px solid var(--line);
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.done,
+.current {
+  border-bottom-color: var(--teal);
+}
+
+.link {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  display: flex;
+  gap: 0.6rem;
+  min-height: var(--stepnav-height);
+  min-width: 0;
+  padding: 0 0.5rem 0 0;
+  text-align: left;
+  width: 100%;
+}
+
+.link:disabled {
+  color: var(--stone);
+  cursor: default;
+}
+
+/* The wordmark's rotated square at marker scale; hollow until reached. */
+.marker {
+  border: 2px solid var(--line-strong);
+  flex: 0 0 auto;
+  height: 0.62rem;
+  transform: rotate(45deg);
+  width: 0.62rem;
+}
+
+.done .marker {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+/* Done and current share the fill — the filled length of the rule below is what
+   shows progress. The ring is what separates "here" from "behind you". */
+.current .marker {
+  background: var(--teal);
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(0, 124, 137, 0.18);
+}
+
+.label {
+  align-items: baseline;
+  display: flex;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.step {
+  color: var(--teal-deep);
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.link:disabled .step {
+  color: var(--stone);
+  opacity: 0.7;
+}
+
+.link strong {
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.current .link strong {
+  color: var(--teal-deep);
+  font-weight: 700;
+}
+
+.link:not(:disabled):hover strong {
+  color: var(--teal-deep);
+}
+
+@media (max-width: 760px) {
+  .hero {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+
+  .track {
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Four labels do not fit, and truncating all four tells the reader nothing.
+     Only the current step keeps its name; the rest stay as markers. */
+  .item {
+    flex: 0 0 auto;
+  }
+
+  .current {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .item:not(.current) .label {
+    display: none;
+  }
+
+  .link {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .current .link {
+    justify-content: flex-start;
+  }
+
+  .link strong {
+    font-size: 0.94rem;
+  }
+}
