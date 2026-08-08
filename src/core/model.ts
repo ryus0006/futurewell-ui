@@ -87,7 +87,6 @@ export interface Clinic {
   district: string;
   address: string;
   phone: string;
-  services: string;
   lat: number;
   lng: number;
 }

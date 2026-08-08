@@ -182,10 +182,6 @@ export function ClinicFinder({ onSearch, onRetry }: ClinicFinderProps) {
                     </dd>
                   </div>
                   <div>
-                    <dt>Services</dt>
-                    <dd>{selected.services}</dd>
-                  </div>
-                  <div>
                     <dt>Type</dt>
                     <dd>{selected.type}</dd>
                   </div>
