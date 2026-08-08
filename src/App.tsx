@@ -12,6 +12,7 @@ import { AwarenessSection } from './sections/AwarenessSection';
 import { ProfileSection } from './sections/ProfileSection';
 import { RecommendationSection } from './sections/RecommendationSection';
 import { RiskSection } from './sections/RiskSection';
+import { HeroIntro } from './sections/HeroIntro';
 import { Section, stageClass } from './shell/Section';
 import { SECTIONS } from './shell/sections';
 import { StepNav } from './shell/StepNav';
@@ -40,6 +41,7 @@ const UNEXPECTED: ApiError = {
 export default function App() {
   const [requestedStep, setRequestedStep] = useState(0);
   const [showFinder, setShowFinder] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   const hasProfile = useAssessment((s) => s.profile !== null);
   const riskStatus = useAssessment((s) => s.riskStatus);
@@ -71,11 +73,18 @@ export default function App() {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
     screenRef.current?.focus({ preventScroll: true });
-  }, [step, showFinder]);
+  }, [step, showFinder, showIntro]);
 
   const goToStep = useCallback((index: number) => {
+    setShowIntro(false);
     setShowFinder(false);
     setRequestedStep(index);
+  }, []);
+
+  const goHome = useCallback(() => {
+    setRequestedStep(0);
+    setShowFinder(false);
+    setShowIntro(true);
   }, []);
 
   // Drops superseded requests: a slow first response must not overwrite a
@@ -239,6 +248,7 @@ export default function App() {
       store.open();
       void loadClinics(store.query);
     }
+    setShowIntro(false);
     setShowFinder(true);
   }, [loadClinics]);
 
@@ -248,11 +258,11 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#profile">
-        Skip to the assessment
+      <a className="skip-link" href={showIntro ? '#hero-actions' : '#profile'}>
+        {showIntro ? 'Skip to actions' : 'Skip to the assessment'}
       </a>
 
-      <Topbar onHome={() => goToStep(0)} />
+      <Topbar onHome={goHome} />
 
       <main className="workspace">
         {/* Sections are h2 and the brand is a control, so without this the
@@ -262,52 +272,60 @@ export default function App() {
           FutureWell — preventive heart health assessment for adults aged 30 to 79
         </h1>
 
-        {!showFinder && <StepNav current={step} furthest={furthest} onNavigate={goToStep} />}
+        {showIntro ? (
+          <div className={stageClass} ref={screenRef} tabIndex={-1}>
+            <HeroIntro onStart={() => goToStep(0)} onFindClinic={openFinder} />
+          </div>
+        ) : (
+          <>
+            {!showFinder && <StepNav current={step} furthest={furthest} onNavigate={goToStep} />}
 
-        {/* Focus target on every move: reachable programmatically, not tabbable. */}
-        <div className={stageClass} ref={screenRef} tabIndex={-1}>
-          {showFinder ? (
-            <>
-              <p className="screen-back">
-                <button type="button" onClick={() => goToStep(step)}>
-                  Back to {SECTIONS[step].title}
-                </button>
-              </p>
-              <Section
-                id={CLINICS_ID}
-                heading="Find a clinic."
-                lede="Public clinics across Malaysia, searchable by name, state or type. You do not need a risk result to use this."
-              >
-                <ClinicFinder onSearch={loadClinics} onRetry={retryClinics} />
-              </Section>
-            </>
-          ) : (
-            <>
-              {step > 0 && (
-                <p className="screen-back">
-                  <button type="button" onClick={() => goToStep(step - 1)}>
-                    Back to {SECTIONS[step - 1].title}
-                  </button>
-                </p>
-              )}
+            {/* Focus target on every move: reachable programmatically, not tabbable. */}
+            <div className={stageClass} ref={screenRef} tabIndex={-1}>
+              {showFinder ? (
+                <>
+                  <p className="screen-back">
+                    <button type="button" onClick={() => goToStep(step)}>
+                      Back to {SECTIONS[step].title}
+                    </button>
+                  </p>
+                  <Section
+                    id={CLINICS_ID}
+                    heading="Find a clinic."
+                    lede="Public clinics across Malaysia, searchable by name, state or type. You do not need a risk result to use this."
+                  >
+                    <ClinicFinder onSearch={loadClinics} onRetry={retryClinics} />
+                  </Section>
+                </>
+              ) : (
+                <>
+                  {step > 0 && (
+                    <p className="screen-back">
+                      <button type="button" onClick={() => goToStep(step - 1)}>
+                        Back to {SECTIONS[step - 1].title}
+                      </button>
+                    </p>
+                  )}
 
-              {step === 0 && <ProfileSection onContinue={handleProfileContinue} />}
-              {step === 1 && (
-                <AwarenessSection onContinue={() => goToStep(2)} onRetry={retryAwareness} />
+                  {step === 0 && <ProfileSection onContinue={handleProfileContinue} />}
+                  {step === 1 && (
+                    <AwarenessSection onContinue={() => goToStep(2)} onRetry={retryAwareness} />
+                  )}
+                  {step === 2 && (
+                    <RiskSection onSubmit={handleRiskSubmit} onFindClinic={openFinder} />
+                  )}
+                  {step === 3 && (
+                    <RecommendationSection
+                      onGoToRisk={() => goToStep(2)}
+                      onRetry={retryRisk}
+                      onOpenFinder={openFinder}
+                    />
+                  )}
+                </>
               )}
-              {step === 2 && (
-                <RiskSection onSubmit={handleRiskSubmit} onFindClinic={openFinder} />
-              )}
-              {step === 3 && (
-                <RecommendationSection
-                  onGoToRisk={() => goToStep(2)}
-                  onRetry={retryRisk}
-                  onOpenFinder={openFinder}
-                />
-              )}
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
