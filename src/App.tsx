@@ -259,7 +259,7 @@ export default function App() {
             outline starts at level 2. Hidden, because the design's first visible
             words belong to step 01. */}
         <h1 className="visually-hidden">
-          FutureWell — preventive heart health assessment for adults aged 41 to 59
+          FutureWell — preventive heart health assessment for adults aged 30 to 79
         </h1>
 
         {!showFinder && <StepNav current={step} furthest={furthest} onNavigate={goToStep} />}

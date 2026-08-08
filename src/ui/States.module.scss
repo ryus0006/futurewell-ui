@@ -1,14 +1,13 @@
 .panel {
   background: var(--white);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-line);
   display: grid;
   gap: 0.9rem;
   /* `minmax(0, 1fr)`, not the default `auto` — see the note on `.stage` in
-     Section.module.scss. An auto track grows to its item's min-content, which
-     the reference table's `min-width: 32rem` propagates all the way up, so the
-     page gained a horizontal scrollbar on a phone while the table's own
-     `overflow-x: auto` sat there unused. */
+     Section.module.scss. An auto track grows to its item's min-content, and any
+     item wide enough to do that pushes the whole page into a horizontal
+     scrollbar instead of scrolling inside its own container. */
   grid-template-columns: minmax(0, 1fr);
   padding: clamp(1.2rem, 2.6vw, 2rem);
 }

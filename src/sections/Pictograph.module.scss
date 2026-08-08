@@ -2,14 +2,13 @@
 
 .sheet {
   background: var(--white);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-line);
 }
 
-/* Light, because the reader has to count both groups. The weight on this screen
-   comes from the twenty-five ink figures themselves, not from a dark ground —
-   and on a dark ground the seventy-five went invisible, which left the graphic
-   showing a number with no denominator. */
+/* Light, because the reader has to count both groups: the highlighted figures
+   are the number, and the rest are the denominator it is out of. The weight on
+   this screen comes from the ink figures themselves, not from the ground. */
 .stage {
   background: var(--mist);
   padding: clamp(1.4rem, 3.4vw, 2.2rem);
@@ -52,7 +51,7 @@
 
 .key {
   align-items: baseline;
-  border-top: 1px solid var(--line-strong);
+  border-top: 1px solid var(--line);
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1.4rem;
@@ -89,15 +88,17 @@
 
 /* ------------------------------------------------------------ callout --- */
 
+/* The callout and the pivot are two sentences of one thought — what the graphic
+   shows, then what to do with it — so nothing divides them. The mist stage above
+   is what separates both from the graphic. */
 .callout {
   background: var(--white);
   font-family: var(--font-display);
-  border-bottom: 1px solid var(--line);
   color: var(--ink);
   font-size: clamp(1.02rem, 1.5vw, 1.18rem);
   font-weight: 400;
   line-height: 1.55;
-  padding: 1.1rem clamp(1.2rem, 3vw, 2rem);
+  padding: 1.1rem clamp(1.2rem, 3vw, 2rem) 0.4rem;
 }
 
 .callout strong {
@@ -109,24 +110,27 @@
   font-family: var(--font-display);
   font-size: clamp(1rem, 1.4vw, 1.15rem);
   line-height: 1.55;
-  padding: 1.1rem clamp(1.2rem, 3vw, 2rem);
+  padding: 0.4rem clamp(1.2rem, 3vw, 2rem) 1.4rem;
 }
 
+/* Sits under the reference table and credits it, so it belongs to the block
+   above rather than being a band of its own. */
 .source {
-  border-top: 1px solid var(--line);
   color: var(--stone);
   font-size: 0.84rem;
   font-weight: 400;
   line-height: 1.45;
-  padding: 1rem clamp(1.2rem, 3vw, 2rem);
+  padding: 0 clamp(1.2rem, 3vw, 2rem) 1.2rem;
 }
 
 /* ----------------------------------------------------- reference table --- */
 
+/* The only rule below the graphic: a table is a different kind of content from
+   the sentences above it, which is the one division on this sheet worth drawing. */
 .reference {
   border-top: 1px solid var(--line);
   overflow-x: auto;
-  padding: 1rem clamp(1.2rem, 3vw, 2rem) 1.2rem;
+  padding: 1rem clamp(1.2rem, 3vw, 2rem) 0.8rem;
 }
 
 .reference table {
@@ -150,8 +154,8 @@
   text-align: left;
 }
 
-/* Two columns of prose in ~290px is right at the limit: at the full size both
-   group labels wrap after the comma. A step down buys the line back. */
+/* Two columns of prose at phone width are right at the limit: at the full type
+   size both group labels wrap after the comma. A step down buys the line back. */
 @media (max-width: 760px) {
   .reference th,
   .reference td {

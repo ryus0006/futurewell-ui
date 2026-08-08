@@ -1,5 +1,5 @@
-/* Fully opaque, not near-opaque: at 0.98 the page text stayed faintly legible
-   through the bar on every scroll, which reads as a rendering fault. */
+/* Fully opaque, not near-opaque. The bar sits over scrolling content, and page
+   text showing faintly through it reads as a rendering fault. */
 .topbar {
   align-items: stretch;
   background: var(--white);
@@ -24,11 +24,13 @@
   text-decoration: none;
 }
 
-/* Ink, not teal: the mark is identity, and teal on this page means "you can act
-   on this". A coloured mark in a corner claims an affordance it does not have. */
+/* The step markers in `StepNav` are this same rotated square at a third of the
+   size, which is the intended reading: the mark is the site, the markers are the
+   site tracking where you are. The white counter and the scale are what keep the
+   two from being mistaken for each other. */
 .mark {
   align-items: center;
-  background: var(--ink);
+  background: var(--teal);
   display: inline-flex;
   height: 1.7rem;
   justify-content: center;

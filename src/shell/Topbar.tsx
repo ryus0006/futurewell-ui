@@ -5,8 +5,9 @@ interface TopbarProps {
 }
 
 /**
- * Identity only. The clinic finder is reached from the risk form and the result;
- * a permanent button here competed with the step the reader was on.
+ * Identity only. The clinic finder is reached from the risk form and the result,
+ * where it answers a question the reader has just been asked; a permanent button
+ * here would compete with the step they are on.
  */
 export function Topbar({ onHome }: TopbarProps) {
   return (

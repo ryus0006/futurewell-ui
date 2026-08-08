@@ -224,8 +224,7 @@ export function ClinicFinder({ onSearch, onRetry }: ClinicFinderProps) {
 
           <p className={styles.source}>
             Active public clinics in the Ministry of Health registry. Private clinics are not
-            included; confirm available services before visiting. No location is requested — results
-            come from your search, not from where you are.
+            included; confirm available services before visiting.
           </p>
         </div>
       </div>

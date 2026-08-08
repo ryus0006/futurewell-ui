@@ -55,9 +55,10 @@ export function Pictograph({ awareness }: { awareness: Awareness }) {
 
       <div className={styles.reference}>
         <table>
-          {/* Hidden rather than deleted: a table with no caption reaches a screen
+          {/* Hidden rather than dropped: a table with no caption reaches a screen
               reader as an unlabelled grid of numbers, with nothing to say what it
-              tabulates. The heading it replaces was visual only. */}
+              tabulates. Sighted readers get the same context from the sentences
+              above, so it does not need to be visible. */}
           <caption className="visually-hidden">
             Reference data: share of deaths from {context.causeLabel} by group
           </caption>
