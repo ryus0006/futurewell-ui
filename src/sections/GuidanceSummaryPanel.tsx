@@ -13,7 +13,8 @@ interface GuidanceSummaryPanelProps {
  *
  * The backend selects the guidance records that apply and rewrites them into
  * this prose, so this panel is the whole of the advice rather than a summary of
- * anything else on the page.
+ * anything else on the page. The note under the text says so, because the
+ * selection is deterministic but the wording is not.
  */
 export function GuidanceSummaryPanel({ guidance, status }: GuidanceSummaryPanelProps) {
   return (
@@ -38,7 +39,16 @@ export function GuidanceSummaryPanel({ guidance, status }: GuidanceSummaryPanelP
         </p>
       )}
 
-      {status === 'ready' && guidance && <p className={styles.summary}>{guidance.summary}</p>}
+      {status === 'ready' && guidance && (
+        <>
+          <p className={styles.summary}>{guidance.summary}</p>
+          {/* Named only where there is text to attribute it to. */}
+          <p className={styles.provenance}>
+            Disclaimer: Guidance is selected using predefined rules and rewritten by AI for
+            clarity.
+          </p>
+        </>
+      )}
     </article>
   );
 }

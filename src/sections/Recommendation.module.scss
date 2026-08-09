@@ -141,6 +141,14 @@
   max-width: 66ch;
 }
 
+/* Fine print, at the same size as `.disclaimer` but without its rule: the panel
+   holds one paragraph, so there is no boundary here for a rule to mark. */
+.provenance {
+  color: var(--stone);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 /* Shown only when the backend reports an unvalidated model. */
 .illustrative {
   background: rgba(154, 98, 7, 0.09);
