@@ -7,7 +7,13 @@ import { SECTIONS } from '../shell/sections';
 import { ErrorState } from '../ui/States';
 import form from './Form.module.scss';
 import styles from './RiskSection.module.scss';
-import { RISK_RULES, validateChoice, validateRange, type RiskNumericField } from './validation';
+import {
+  isNumericEntry,
+  RISK_RULES,
+  validateChoice,
+  validateRange,
+  type RiskNumericField,
+} from './validation';
 
 interface RiskSectionProps {
   onSubmit: (inputs: RiskInputs) => void;
@@ -206,18 +212,22 @@ export function RiskSection({ onSubmit, onFindClinic }: RiskSectionProps) {
                     <input
                       id={field}
                       name={field}
-                      type="number"
-                      inputMode="decimal"
-                      /* The accepted range is already what the placeholder
-                         states, so the arrows stay inside it. Typing outside it
-                         still works, and `validateRange` explains why. */
-                      min={rule.min}
-                      max={rule.max}
-                      step={rule.step}
+                      /* Text rather than a number field, which reports its value
+                         as empty whenever the content is not yet a complete
+                         number — "5." on the way to 5.8 arrives indistinguishable
+                         from pasted junk. Plain text hands over what was actually
+                         entered, so one shape check below covers typing, pasting
+                         and dropping alike. The spinner these fields would gain
+                         is hidden anyway, since it sits where the unit label is. */
+                      type="text"
+                      inputMode={rule.decimals === 0 ? 'numeric' : 'decimal'}
                       placeholder={`${rule.min}–${rule.max}`}
                       value={numeric[field]}
                       onChange={(e) => {
                         const value = e.target.value;
+                        /* Out-of-range values are let through and answered on
+                           blur; only the wrong shape is refused outright. */
+                        if (!isNumericEntry(value, rule)) return;
                         setNumeric((n) => ({ ...n, [field]: value }));
                       }}
                       onBlur={() =>

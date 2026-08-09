@@ -10,10 +10,11 @@ export interface RangeRule {
   max: number;
   label: string;
   unit?: string;
-  step?: number;
+  /** Decimal places the field accepts. Zero means whole numbers only. */
+  decimals: number;
 }
 
-export const AGE_RULE: RangeRule = { min: 30, max: 79, label: 'Age' };
+export const AGE_RULE: RangeRule = { min: 30, max: 79, label: 'Age', decimals: 0 };
 
 /**
  * Bounds for the field's own `min`/`max`, so the spinner arrows can only step
@@ -54,12 +55,26 @@ export function isAgeEntry(raw: string): boolean {
 }
 
 export const RISK_RULES = {
-  systolicBp: { min: 80, max: 240, label: 'Systolic blood pressure', unit: 'mmHg', step: 1 },
-  totalCholesterol: { min: 2, max: 12, label: 'Total cholesterol', unit: 'mmol/L', step: 0.1 },
-  hdlCholesterol: { min: 0.3, max: 4, label: 'HDL cholesterol', unit: 'mmol/L', step: 0.1 },
+  systolicBp: { min: 80, max: 240, label: 'Systolic blood pressure', unit: 'mmHg', decimals: 0 },
+  totalCholesterol: { min: 2, max: 12, label: 'Total cholesterol', unit: 'mmol/L', decimals: 2 },
+  hdlCholesterol: { min: 0.3, max: 4, label: 'HDL cholesterol', unit: 'mmol/L', decimals: 2 },
 } satisfies Record<string, RangeRule>;
 
 export type RiskNumericField = keyof typeof RISK_RULES;
+
+/**
+ * Whether `raw` may be *in* a numeric risk field: digits, and no more decimal
+ * places than the rule allows. A lone trailing '.' passes, because reaching 5.8
+ * means passing through "5.".
+ *
+ * Range is deliberately not checked here. A value outside the band is a real
+ * answer that this assessment cannot use, so it is explained by `validateRange`
+ * rather than swallowed as the reader types it.
+ */
+export function isNumericEntry(raw: string, rule: RangeRule): boolean {
+  const shape = rule.decimals === 0 ? /^\d*$/ : new RegExp(`^\\d*(\\.\\d{0,${rule.decimals}})?$`);
+  return shape.test(raw);
+}
 
 /** Returns the message to show, or an empty string when the value is valid. */
 export function validateAge(raw: string): string {
@@ -78,6 +93,15 @@ export function validateRange(raw: string, rule: RangeRule): string {
   if (!Number.isFinite(value)) return `${rule.label} needs a valid number.`;
   if (value < rule.min || value > rule.max) {
     return `${rule.label} should be between ${rule.min} and ${rule.max} for this assessment.`;
+  }
+  /* Backstop for a value the field's own guard never saw — autofill, or a
+     restored entry. Checked after the range, which is the more useful thing to
+     say when a value is both out of band and the wrong shape. */
+  const places = raw.includes('.') ? raw.trim().split('.')[1].length : 0;
+  if (places > rule.decimals) {
+    return rule.decimals === 0
+      ? `${rule.label} should be a whole number.`
+      : `${rule.label} should have at most ${rule.decimals} decimal places.`;
   }
   return '';
 }
