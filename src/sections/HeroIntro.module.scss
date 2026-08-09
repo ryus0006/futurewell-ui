@@ -3,8 +3,18 @@
   display: grid;
   gap: clamp(1.5rem, 4vw, 3rem);
   grid-template-columns: minmax(0, 0.95fr) minmax(21rem, 0.8fr);
-  min-height: calc(100vh - var(--topbar-height) - 4rem);
-  padding: clamp(2rem, 5vw, 4rem) 0 clamp(2rem, 4vw, 3.5rem);
+  /* One screenful, so the landing needs no scroll to be read in full. The
+     subtraction is the page frame this sits inside: the topbar, `.stage`'s
+     padding above, and the workspace's padding below. Under-subtract and the
+     screen overflows by exactly the difference.
+
+     `svh` rather than `vh` so a mobile browser's collapsing toolbar cannot make
+     it taller than the space actually available. */
+  min-height: calc(100svh - var(--topbar-height) - 6.5rem);
+  /* Light, because `min-height` above supplies the room and `.copy` centres
+     itself in it. Padding on top of that is what pushed this past its own
+     minimum. */
+  padding: clamp(1rem, 2.5vh, 2rem) 0;
 }
 
 .copy {
