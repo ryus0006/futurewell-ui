@@ -109,7 +109,7 @@ export function ClinicMap({
 
       {!wheelZoom && !selected && (
         <div className={styles.zoomHint} aria-hidden="true">
-          Zoom in to see individual clinics
+          Click the map to zoom
         </div>
       )}
     </MapContainer>
