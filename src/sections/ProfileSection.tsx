@@ -67,8 +67,30 @@ export function ProfileSection({ onContinue }: ProfileSectionProps) {
               /* Refuses anything that cannot become an accepted age, so the
                  field can hold no value outside the band however it is entered
                  — typed, pasted, or stepped. */
+              /* `e`, `E`, `+`, `-` and `.` spell scientific notation, so a number
+                 input accepts them — but an age never needs one. They are refused
+                 here rather than in `onChange`, which cannot see them: while the
+                 content is not a complete number the element reports its value as
+                 empty, so typing one into an empty field reads as '' both before
+                 and after, and React suppresses the event as an unchanged value.
+                 Printable keys are their own `key`; named keys like Backspace and
+                 ArrowUp do not match, so editing and stepping still work. */
+              onKeyDown={(e) => {
+                if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
+              }}
               onChange={(e) => {
-                const next = e.target.value;
+                const el = e.target;
+
+                /* Backstop for the same characters arriving by paste or drop,
+                   where there is no keystroke to refuse. Reachable only once the
+                   field holds something, which is what makes the value change. */
+                if (el.validity.badInput) {
+                  el.value = '';
+                  setAge('');
+                  return;
+                }
+
+                const next = el.value;
                 if (isAgeEntry(next)) {
                   setAge(next);
                   setAgeError('');
