@@ -75,23 +75,11 @@
   position: relative;
 }
 
-/* `appearance: textfield` drops the spinner in Firefox; the pseudo-elements below
-   do it in Chrome and Safari. The browser draws that spinner at the input's right
-   edge, which is where the unit label sits — and the label has no background, so
-   the arrows read through the word. On a form taking both mmol/L and mmHg the
-   unit is the one thing that has to stay legible.
-
-   Arrow keys still step the value, so only the buttons go. Scoped to these
-   fields: the age spinner is useful and stays. */
+/* Room for the unit, which is positioned over the input's right edge. Without
+   it the value runs under the word, and on a form taking both mmol/L and mmHg
+   the unit is the one thing that has to stay legible. */
 .inputWithUnit input {
-  appearance: textfield;
   padding-right: 5.8rem;
-}
-
-.inputWithUnit input::-webkit-inner-spin-button,
-.inputWithUnit input::-webkit-outer-spin-button {
-  appearance: none;
-  margin: 0;
 }
 
 .inputWithUnit b {
