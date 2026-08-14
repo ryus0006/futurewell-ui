@@ -70,11 +70,24 @@ export interface Awareness {
 /* ------------------------------------------------------------- guidance --- */
 
 /**
- * The whole of the advice shown in step 04. The backend selects the guidance
- * records and rewrites them; the frontend holds no copy of them.
+ * One curated action, rendered as a card in step 04. Taken verbatim from the
+ * backend's guidance records so it stays traceable to its clinical source.
+ */
+export interface GuidanceTip {
+  title: string;
+  text: string;
+  category: string;
+  source: string;
+}
+
+/**
+ * The advice shown in step 04: a short, gain-framed intro line (written by the
+ * model) above a checklist of curated actions. The backend selects and ranks
+ * the tips; the frontend holds no copy of the underlying records.
  */
 export interface Guidance {
-  summary: string;
+  intro: string;
+  tips: GuidanceTip[];
 }
 
 /* -------------------------------------------------------------- clinics --- */
