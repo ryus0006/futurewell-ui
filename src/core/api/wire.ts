@@ -73,8 +73,16 @@ export interface GuidanceRequestWire {
   level: RiskLevelWire;
 }
 
+export interface GuidanceTipWire {
+  title: string;
+  text: string;
+  category: string;
+  source: string;
+}
+
 export interface GuidanceResponseWire {
-  summary: string;
+  intro: string;
+  tips: GuidanceTipWire[];
 }
 
 /* --------------------------------------- GET /api/clinics + /clusters */

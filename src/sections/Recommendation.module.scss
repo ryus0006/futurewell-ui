@@ -40,14 +40,14 @@
   box-shadow: none;
 }
 
-/* What to do about the answer: below the estimate, above the receipt. Takes the
-   estimate's column rather than the full width — its paragraph is capped at a
-   readable measure, and the leftover space reads as a missing element inside a
-   border but as margin outside one. */
+/* What to do about the answer: the full width below the top row. The estimate
+   and its receipt sit side by side above; the actions span both columns so the
+   checklist can lay out left-and-right rather than leaving the space under the
+   receipt empty. */
 .grid > :nth-child(3) {
   border-color: var(--line);
   box-shadow: none;
-  grid-column: 1;
+  grid-column: 1 / -1;
 }
 
 .label {
@@ -226,8 +226,68 @@
   max-width: 62ch;
 }
 
+/* The one warm, gain-framed line above the checklist. Sized like `.summary`
+   because it leads the advice, then hands off to the cards below it. */
+.intro {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+/* The actions themselves: short cards a reader scans rather than a paragraph
+   they have to finish. Ranked by the backend, so reading order runs left to
+   right, top to bottom. Two columns fill the panel's full width; `minmax(0, 1fr)`
+   keeps a long tip from forcing the track wider than its half. They collapse to
+   one column on narrow screens. */
+.tips {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Recessed like the receipt panel, with a positive-green edge that reads the
+   actions as wins to collect rather than warnings. */
+.tip {
+  background: var(--mist);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--risk-low);
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.tipTag {
+  color: var(--stone);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tipTitle {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.tipText {
+  color: var(--stone);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 @media (max-width: 760px) {
   .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tips {
     grid-template-columns: 1fr;
   }
 }

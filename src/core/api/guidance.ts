@@ -24,5 +24,13 @@ export async function fetchGuidance(
     signal,
   });
 
-  return { summary: wire.summary };
+  return {
+    intro: wire.intro,
+    tips: wire.tips.map((tip) => ({
+      title: tip.title,
+      text: tip.text,
+      category: tip.category,
+      source: tip.source,
+    })),
+  };
 }
