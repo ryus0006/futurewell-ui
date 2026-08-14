@@ -226,14 +226,14 @@
   max-width: 62ch;
 }
 
-/* The one warm, gain-framed line above the checklist. Sized like `.summary`
-   because it leads the advice, then hands off to the cards below it. */
+/* The one warm, gain-framed line above the checklist. Spans the full panel
+   width to match the cards below it, rather than the narrow reading measure it
+   used when the panel sat in a single column. */
 .intro {
   color: var(--ink);
   font-family: var(--font-display);
   font-size: 1.12rem;
   line-height: 1.55;
-  max-width: 62ch;
 }
 
 /* The actions themselves: short cards a reader scans rather than a paragraph
